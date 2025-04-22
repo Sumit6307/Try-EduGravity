@@ -1,31 +1,52 @@
 import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { initThreeJS } from '../utils/threejsUtils';
 
 function VisualCanvas({ visual }) {
-  const mountRef = useRef(null);
+  const canvasRef = useRef(null);
 
   useEffect(() => {
-    const { scene, camera, renderer, cube } = initThreeJS();
-    mountRef.current.appendChild(renderer.domElement);
+    const canvas = canvasRef.current;
+    if (!canvas) return; // Prevent null reference
 
-    const controls = new OrbitControls(camera, renderer.domElement);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return; // Ensure context is available
 
-    const animate = () => {
-      requestAnimationFrame(animate);
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
-      renderer.render(scene, camera);
-    };
-    animate();
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    return () => {
-      mountRef.current.removeChild(renderer.domElement);
-    };
+    if (visual && typeof visual === 'string') {
+      const img = new Image();
+      img.src = visual;
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+      };
+      img.onerror = () => {
+        console.error('Failed to load image:', visual);
+        ctx.fillStyle = '#f0f0f0';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#000';
+        ctx.font = '16px Arial';
+        ctx.fillText('Failed to load diagram', 10, 50);
+      };
+    } else {
+      // Draw placeholder if no valid visual
+      canvas.width = 400;
+      canvas.height = 300;
+      ctx.fillStyle = '#f0f0f0';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#000';
+      ctx.font = '16px Arial';
+      ctx.fillText('No diagram available', 10, 50);
+    }
   }, [visual]);
 
-  return <div ref={mountRef} className="mt-4" />;
+  return (
+    <div className="mt-4">
+      <h3 className="text-lg font-semibold">Diagram</h3>
+      <canvas ref={canvasRef} className="border rounded" />
+    </div>
+  );
 }
 
 export default VisualCanvas;

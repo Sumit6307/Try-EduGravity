@@ -5,6 +5,7 @@ import api from '../utils/api';
 function HistoryPanel() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -12,7 +13,8 @@ function HistoryPanel() {
         const res = await api.get('/history');
         setHistory(res.data);
       } catch (err) {
-        console.error('Failed to fetch history');
+        setError('Failed to fetch history: ' + (err.response?.data?.msg || err.message));
+        console.error('Failed to fetch history:', err);
       }
       setLoading(false);
     };
@@ -27,6 +29,7 @@ function HistoryPanel() {
       className="p-4 bg-gray-100 rounded-lg"
     >
       <h3 className="text-lg font-semibold mb-2">Recent Queries</h3>
+      {error && <p className="text-red-500 mb-2">{error}</p>}
       {loading ? (
         <p>Loading...</p>
       ) : history.length === 0 ? (

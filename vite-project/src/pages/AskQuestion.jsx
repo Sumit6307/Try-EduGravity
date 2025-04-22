@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import api from '../utils/api';
 import QueryInput from '../components/QueryInput';
@@ -12,15 +12,20 @@ function AskQuestion() {
   const [query, setQuery] = useState('');
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const { board } = useContext(BoardContext);
 
   const handleSubmit = async () => {
     setLoading(true);
+    setResponse(null);
+    setError(null);
     try {
       const res = await api.post('/query', { query, board });
       setResponse(res.data);
     } catch (err) {
-      setResponse({ error: 'Failed to fetch response' });
+      const errorMsg = err.response?.data?.error || err.message || 'Failed to fetch response';
+      setError(errorMsg);
+      console.error('Failed to submit query:', err);
     }
     setLoading(false);
   };
@@ -45,8 +50,15 @@ function AskQuestion() {
               onSubmit={handleSubmit}
               loading={loading}
             />
-            {response && <ResponseDisplay response={response} />}
-            {response?.visual && <VisualCanvas visual={response.visual} />}
+            {error && (
+              <p className="text-red-500 mt-2">{error}</p>
+            )}
+            {response && !error && (
+              <>
+                <ResponseDisplay response={response} />
+                {response.visual && <VisualCanvas visual={response.visual} />}
+              </>
+            )}
           </div>
           <div>
             <HistoryPanel />
