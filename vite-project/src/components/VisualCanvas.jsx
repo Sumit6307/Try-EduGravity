@@ -5,12 +5,10 @@ function VisualCanvas({ visual }) {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return; // Prevent null reference
-
+    if (!canvas) return; 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return; // Ensure context is available
+    if (!ctx) return; 
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (visual && typeof visual === 'string') {
@@ -30,7 +28,7 @@ function VisualCanvas({ visual }) {
         ctx.fillText('Failed to load diagram', 10, 50);
       };
     } else {
-      // Draw placeholder if no valid visual
+      
       canvas.width = 400;
       canvas.height = 300;
       ctx.fillStyle = '#f0f0f0';

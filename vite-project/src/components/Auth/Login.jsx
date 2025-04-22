@@ -11,12 +11,10 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Debug re-renders
   useEffect(() => {
     console.log('Login component rendered:', { email, password, isLoading });
   }, [email, password, isLoading]);
 
-  // Memoized input handler
   const handleInputChange = useCallback((setter, name) => (e) => {
     console.log(`Input changed: ${name} = ${e.target.value}`);
     setter(e.target.value);
@@ -28,7 +26,6 @@ function Login() {
     setIsLoading(true);
     console.log('Login form submitted:', { email, password });
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address');

@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-// Debug render
 console.log('Dashboard.jsx imported');
 
 function Dashboard() {
@@ -11,7 +10,6 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [recentQueries, setRecentQueries] = useState([]); // Mock recent queries
 
-  // Mock user and recent queries
   useEffect(() => {
     console.log('Dashboard rendered:', { user, loading });
     const storedUser = localStorage.getItem('user');
@@ -20,7 +18,6 @@ function Dashboard() {
     setRecentQueries(history.slice(0, 3));
   }, []);
 
-  // Handle navigation
   const handleNavigate = useCallback((path) => {
     console.log('Navigating to:', path);
     setLoading(true);
@@ -30,7 +27,6 @@ function Dashboard() {
     }, 300); // Simulate navigation delay
   }, [navigate]);
 
-  // Handle logout
   const handleLogout = () => {
     console.log('Logging out');
     localStorage.removeItem('user');
