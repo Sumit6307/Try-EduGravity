@@ -32,10 +32,10 @@ function AskQuestion() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center"
+      className="min-h-screen bg-cover bg-center py-16"
       style={{ backgroundImage: `url(/assets/images/${board.toLowerCase()}-bg.jpg)` }}
     >
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
